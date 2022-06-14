@@ -16,7 +16,7 @@ abstract class ApiController {
     /**
      * Output file path.
      */
-    const OUTPUT_PATH = '/tmp/';
+    const OUTPUT_PATH = '/home/tms-contact-import/';
 
     /**
      * Request language
@@ -26,6 +26,15 @@ abstract class ApiController {
     protected string $language = '';
 
     /**
+     * Get file output path.
+     *
+     * @return string
+     */
+    protected function get_output_path() : string {
+        return WP_ENV === 'development' ? '/tmp/' : self::OUTPUT_PATH;
+    }
+
+    /**
      * Get file path and name.
      *
      * @return string
@@ -33,7 +42,7 @@ abstract class ApiController {
     public function get_file() : string {
         return sprintf(
             '%s%s-%s.json',
-            self::OUTPUT_PATH,
+            $this->get_output_path(),
             'drupal-' . $this->get_slug(),
             $this->language
         );
