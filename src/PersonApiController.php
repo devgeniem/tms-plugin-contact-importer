@@ -22,7 +22,7 @@ class PersonApiController extends ApiController {
      *
      * @return string
      */
-    public function get_slug() : string {
+    protected function get_slug() : string {
         return self::SLUG;
     }
 

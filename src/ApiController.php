@@ -84,7 +84,7 @@ abstract class ApiController {
      *
      * @return string
      */
-    abstract public function get_slug() : string;
+    abstract protected function get_slug() : string;
 
     /**
      * Do an API request
