@@ -1,8 +1,8 @@
 {
-    "name": "tampere/tms-plugin-boilerplate",
+    "name": "tampere/tms-plugin-contact-importer",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
-    "description": "{{plugin-description}}",
+    "description": "Import person and place of business entities from Tampere.fi",
     "homepage": "https://geniem.com",
     "authors": [
         {
@@ -17,10 +17,11 @@
     ],
     "require": {
         "php": ">=7.4|^8",
-        "composer/installers": "^v1.10.0"
+        "composer/installers": "^v1.10.0",
+        "ext-json": "*"
     },
     "autoload": {
-        "psr-4": {"Tms\\Plugin\\Boilerplate\\": "src/"}
+        "psr-4": {"TMS\\Plugin\\ContactImporter\\": "src/"}
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

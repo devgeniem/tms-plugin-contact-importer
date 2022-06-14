@@ -3,12 +3,12 @@
  * Copyright (c) 2021 Geniem Oy.
  */
 
-namespace Tms\Plugin\Boilerplate;
+namespace TMS\Plugin\ContactImporter;
 
 /**
  * Class Plugin
  *
- * @package Tms\Plugin\Boilerplate
+ * @package TMS\Plugin\ContactImporter
  */
 final class Plugin {
 
@@ -25,18 +25,6 @@ final class Plugin {
      * @var string
      */
     protected $version = '';
-    /**
-     * Path to assets distribution versions.
-     *
-     * @var string
-     */
-    protected string $dist_path = '';
-    /**
-     * Uri to assets distribution versions.
-     *
-     * @var string
-     */
-    protected string $dist_uri = '';
 
     /**
      * Get the instance.
@@ -98,6 +86,7 @@ final class Plugin {
         if ( empty( self::$instance ) ) {
             self::$instance = new self( $version, $plugin_path );
             self::$instance->hooks();
+            self::$instance->init_cli_commands();
         }
     }
 
@@ -120,68 +109,46 @@ final class Plugin {
         $this->version     = $version;
         $this->plugin_path = $plugin_path;
         $this->plugin_uri  = plugin_dir_url( $plugin_path ) . basename( $this->plugin_path );
-        $this->dist_path   = $this->plugin_path . '/assets/dist/';
-        $this->dist_uri    = $this->plugin_uri . '/assets/dist/';
     }
 
     /**
      * Add plugin hooks and filters.
      */
-    protected function hooks() {
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_public_scripts' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+    protected function hooks() : void {
     }
 
     /**
-     * Enqueue public side scripts if they exist.
+     * Add the WP CLI commands.
+     * * @return void
      */
-    public function enqueue_public_scripts() {
-        if ( file_exists( $this->dist_path . 'public.js' ) ) {
-            wp_enqueue_script(
-                'boilerplate-public-js',
-                $this->dist_uri . 'public.js',
-                [ 'jquery' ],
-                $this->mod_time( 'public.js' ),
-                true
+    protected function init_cli_commands() : void {
+        if ( ( defined( 'WP_CLI' ) && WP_CLI && is_main_site() ) ) {
+            \WP_CLI::add_command(
+                'person import',
+                [
+                    self::$instance,
+                    'cli_person_import',
+                ]
+            );
+
+            \WP_CLI::add_command(
+                'place_of_business import',
+                [
+                    self::$instance,
+                    'cli_place_of_business_import',
+                ]
             );
         }
     }
 
-    /**
-     * Enqueue admin side scripts if they exist.
-     */
-    public function enqueue_admin_scripts() {
-        if ( file_exists( $this->dist_path . 'admin.css' ) ) {
-            wp_enqueue_style(
-                'boilerplate-admin-css',
-                $this->dist_uri . 'admin.css',
-                [],
-                $this->mod_time( 'admin.css' ),
-                'all'
-            );
-        }
-
-        if ( file_exists( $this->dist_path . 'admin.js' ) ) {
-            wp_enqueue_script(
-                'boilerplate-admin-js',
-                $this->dist_uri . 'admin.js',
-                [ 'jquery' ],
-                $this->mod_time( 'admin.js' ),
-                true
-            );
-        }
+    public function cli_person_import() : void {
+        \WP_CLI::log( 'Start person import' );
+        $api      = new PersonApiController();
+        $contacts = $api->validate_result_set( $api->get() );
     }
 
-    /**
-     * Get cache busting modification time or plugin version.
-     *
-     * @param string $file File inside assets/dist/ folder.
-     *
-     * @return int|string
-     */
-    private function mod_time( $file = '' ) {
-        return file_exists( $this->dist_path . $file )
-            ? (int) filemtime( $this->dist_path . $file )
-            : $this->version;
+    public function cli_place_of_business_import() : void {
     }
+
+
 }

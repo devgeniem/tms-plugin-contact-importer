@@ -1,19 +1,19 @@
 <?php
 /**
- * Plugin Name: {{plugin-name}}
- * Plugin URI: https://github.com/devgeniem/tms-plugin-boilerplate
+ * Plugin Name: TMS Contact Importer
+ * Plugin URI: https://github.com/devgeniem/tms-plugin-contact-importer
  * Description: {{plugin-description}}
- * Version: 1.0.0
+ * Version: 0.1.0
  * Requires PHP: 7.4
  * Author: Geniem Oy
  * Author URI: https://geniem.com
  * License: GPL v3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: {{text-domain}}
+ * Text Domain: tms-pci
  * Domain Path: /languages
  */
 
-use Tms\Plugin\Boilerplate\Plugin;
+use TMS\Plugin\ContactImporter\Plugin;
 
 // Check if Composer has been initialized in this directory.
 // Otherwise we just use global composer autoloading.
@@ -30,13 +30,13 @@ $plugin_path = __DIR__;
 // Initialize the plugin.
 Plugin::init( $plugin_version, $plugin_path );
 
-if ( ! function_exists( 'boilerplate' ) ) {
+if ( ! function_exists( 'tms_plugin_contact_importer' ) ) {
     /**
-     * Get the {{plugin-name}} plugin instance.
+     * Get the plugin instance.
      *
      * @return Plugin
      */
-    function boilerplate() : Plugin {
+    function tms_plugin_contact_importer() : Plugin {
         return Plugin::plugin();
     }
 }
