@@ -168,6 +168,24 @@ final class Plugin {
         }
     }
 
+    /**
+     * Place of Business import callback
+     *
+     * @return void
+     */
     public function cli_place_of_business_import() : void {
+        WP_CLI::log( 'Start place_of_business import' );
+
+        $api = new PlaceOfBusinessApiController();
+
+        $results = $api->get();
+
+        if ( empty( $results ) ) {
+            return;
+        }
+
+        $file_name = $api->get_file();
+
+        $api->save_to_file( $results, $file_name );
     }
 }
