@@ -159,10 +159,10 @@ final class Plugin {
         ];
 
         foreach ( $languages as $language ) {
-            $file_name = $api->get_file( $language );
-
             $api->set_language( $language );
-            $contacts = $api->validate_result_set( $api->get() );
+
+            $file_name = $api->get_file();
+            $contacts  = $api->validate_result_set( $api->get() );
 
             $api->save_to_file( $contacts, $file_name );
         }
