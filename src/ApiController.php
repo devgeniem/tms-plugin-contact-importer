@@ -18,14 +18,44 @@ abstract class ApiController {
     const OUTPUT_PATH = '/tmp/';
 
     /**
+     * Request language
+     *
+     * @var string
+     */
+    protected string $language = '';
+
+    /**
+     * Set language
+     *
+     * @param string $lang API language code.
+     *
+     * @return $this
+     */
+    public function set_language( string $lang ) : ApiController {
+        $this->language = $lang;
+
+        return $this;
+    }
+
+    /**
+     * Get language
+     *
+     * @return string
+     */
+    public function get_language() : string {
+        return $this->language;
+    }
+
+    /**
      * Get API base url
      *
      * @return string|null
      */
     protected function get_api_base_url() : ?string {
-        $url = env( 'TAMPERE_API_URL' );
+        $url  = env( 'TAMPERE_API_URL' );
+        $lang = $this->get_language();
 
-        if ( DPT_PLL_ACTIVE && pll_current_language() === 'en' ) {
+        if ( ! empty( $lang ) && $lang === 'en' ) {
             $url .= '/en';
         }
 
@@ -100,7 +130,6 @@ abstract class ApiController {
      * @return mixed
      */
     public function get() {
-        $cache_key = 'tampere-drupal-' . $this->get_slug();
         $args      = [
             'headers' => [],
             'timeout' => 30,
@@ -117,13 +146,7 @@ abstract class ApiController {
             'page[limit]'    => 50,
         ];
 
-        $results = $this->do_get( $this->get_slug(), [], $params, $args );
-
-        if ( ! empty( $results ) ) {
-            $this->save_to_file( $results, "$cache_key.json" );
-        }
-
-        return $results;
+        return $this->do_get( $this->get_slug(), [], $params, $args );
     }
 
     /**
@@ -143,7 +166,12 @@ abstract class ApiController {
             return $data;
         }
 
-        $data        = array_merge( $data, $response->data ?? [] );
+        if ( ! empty( $response->data ) ) {
+            foreach ( $response->data as $item ) {
+                $data[] = $item;
+            }
+        }
+
         $query_parts = $this->get_link_query_parts(
             $response->links->next->href ?? ''
         );
@@ -173,25 +201,6 @@ abstract class ApiController {
     }
 
     /**
-     * Attempt to read response from file.
-     *
-     * @param string $filename File name.
-     *
-     * @return false|mixed
-     */
-    protected function read_from_file( $filename ) {
-        $file = self::OUTPUT_PATH . $filename;
-
-        if ( ! file_exists( $file ) ) {
-            return false;
-        }
-
-        $file_contents = file_get_contents( $file );
-
-        return ! empty( $file_contents ) ? json_decode( $file_contents, true ) : false;
-    }
-
-    /**
      * Encode data to JSON & write to file.
      *
      * @param array  $data     Data.
@@ -199,11 +208,11 @@ abstract class ApiController {
      *
      * @return bool True on success.
      */
-    protected function save_to_file( $data, $filename ) : bool {
+    public function save_to_file( $data, $filename ) : bool {
         $success = ! empty( file_put_contents( self::OUTPUT_PATH . $filename, json_encode( $data ) ) );
 
         if ( ! $success ) {
-            ( new Logger() )->error( 'TMS\Plugin\ContactImporter\ApiController: Failed to write JSON file.' );
+            \WP_CLI::error( 'TMS\Plugin\ContactImporter\ApiController: Failed to write JSON file.' );
         }
 
         return $success;

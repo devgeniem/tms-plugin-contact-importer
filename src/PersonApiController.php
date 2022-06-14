@@ -79,14 +79,15 @@ class PersonApiController extends ApiController {
             return $data;
         }
 
-        $data = array_merge(
-            $data,
-            $this->result_set_callback( $response->data ?? [] )
-        );
+        $response_data = $this->result_set_callback( $response->data ?? [] );
 
-        $query_parts = $this->get_link_query_parts(
-            $response->links->next->href ?? ''
-        );
+        if ( ! empty( $response_data ) ) {
+            foreach ( $response_data as $item ) {
+                $data[] = $item;
+            }
+        }
+
+        $query_parts = $this->get_link_query_parts( $response->links->next->href ?? '' );
 
         return empty( $query_parts )
             ? $data

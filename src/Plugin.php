@@ -119,7 +119,8 @@ final class Plugin {
 
     /**
      * Add the WP CLI commands.
-     * * @return void
+     *
+     * @return void
      */
     protected function init_cli_commands() : void {
         if ( ( defined( 'WP_CLI' ) && WP_CLI && is_main_site() ) ) {
@@ -141,14 +142,30 @@ final class Plugin {
         }
     }
 
+    /**
+     * Person import callback
+     *
+     * @return void
+     */
     public function cli_person_import() : void {
         \WP_CLI::log( 'Start person import' );
-        $api      = new PersonApiController();
-        $contacts = $api->validate_result_set( $api->get() );
+
+        $api       = new PersonApiController();
+        $languages = [
+            'fi',
+            'en',
+        ];
+
+        foreach ( $languages as $language ) {
+            $file_name = 'drupal-persons-' . $language;
+
+            $api->set_language( $language );
+            $contacts = $api->validate_result_set( $api->get() );
+
+            $api->save_to_file( $contacts, $file_name );
+        }
     }
 
     public function cli_place_of_business_import() : void {
     }
-
-
 }
