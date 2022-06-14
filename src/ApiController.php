@@ -6,6 +6,7 @@
 namespace TMS\Plugin\ContactImporter;
 
 use TMS\Theme\Base\Logger;
+use WP_CLI;
 
 /**
  * Tampere API Controller
@@ -23,6 +24,20 @@ abstract class ApiController {
      * @var string
      */
     protected string $language = '';
+
+    /**
+     * Get file path and name.
+     *
+     * @return string
+     */
+    public function get_file() : string {
+        return sprintf(
+            '%s%s-%s.json',
+            self::OUTPUT_PATH,
+            'drupal-' . $this->get_slug(),
+            $this->language
+        );
+    }
 
     /**
      * Set language
@@ -69,7 +84,7 @@ abstract class ApiController {
      *
      * @return string
      */
-    abstract protected function get_slug() : string;
+    abstract public function get_slug() : string;
 
     /**
      * Do an API request
@@ -81,6 +96,10 @@ abstract class ApiController {
      * @return bool|mixed
      */
     public function do_request( $path, array $params = [], array $request_args = [] ) {
+        if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+            return;
+        }
+
         $base_url = $this->get_api_base_url();
 
         if ( empty( $base_url ) ) {
@@ -100,7 +119,7 @@ abstract class ApiController {
             )
         );
 
-        \WP_CLI::log( 'Fetch: ' . $request_url );
+        WP_CLI::log( 'Fetch: ' . $request_url );
 
         $response = \wp_remote_get( $request_url, $request_args );
 
@@ -130,7 +149,7 @@ abstract class ApiController {
      * @return mixed
      */
     public function get() {
-        $args      = [
+        $args = [
             'headers' => [],
             'timeout' => 30,
         ];
@@ -208,8 +227,8 @@ abstract class ApiController {
      *
      * @return bool True on success.
      */
-    public function save_to_file( $data, $filename ) : bool {
-        $success = ! empty( file_put_contents( self::OUTPUT_PATH . $filename, json_encode( $data ) ) );
+    public function save_to_file( $data, $file ) : bool {
+        $success = ! empty( file_put_contents( $file, json_encode( $data ) ) );
 
         if ( ! $success ) {
             \WP_CLI::error( 'TMS\Plugin\ContactImporter\ApiController: Failed to write JSON file.' );

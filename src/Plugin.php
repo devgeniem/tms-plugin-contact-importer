@@ -5,6 +5,8 @@
 
 namespace TMS\Plugin\ContactImporter;
 
+use WP_CLI;
+
 /**
  * Class Plugin
  *
@@ -124,7 +126,7 @@ final class Plugin {
      */
     protected function init_cli_commands() : void {
         if ( ( defined( 'WP_CLI' ) && WP_CLI && is_main_site() ) ) {
-            \WP_CLI::add_command(
+            WP_CLI::add_command(
                 'person import',
                 [
                     self::$instance,
@@ -132,7 +134,7 @@ final class Plugin {
                 ]
             );
 
-            \WP_CLI::add_command(
+            WP_CLI::add_command(
                 'place_of_business import',
                 [
                     self::$instance,
@@ -148,7 +150,7 @@ final class Plugin {
      * @return void
      */
     public function cli_person_import() : void {
-        \WP_CLI::log( 'Start person import' );
+        WP_CLI::log( 'Start person import' );
 
         $api       = new PersonApiController();
         $languages = [
@@ -157,7 +159,7 @@ final class Plugin {
         ];
 
         foreach ( $languages as $language ) {
-            $file_name = 'drupal-persons-' . $language;
+            $file_name = $api->get_file( $language );
 
             $api->set_language( $language );
             $contacts = $api->validate_result_set( $api->get() );
