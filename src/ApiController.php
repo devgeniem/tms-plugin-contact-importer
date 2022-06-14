@@ -40,12 +40,13 @@ abstract class ApiController {
      * @return string
      */
     public function get_file() : string {
-        return sprintf(
-            '%s%s-%s.json',
-            $this->get_output_path(),
-            'drupal-' . $this->get_slug(),
-            $this->get_language()
-        );
+        $filename = $this->get_output_path() . 'drupal-' . $this->get_slug();
+
+        if ( ! empty( $this->language ) ) {
+            $filename .= "-{$this->language}";
+        }
+
+        return "$filename.json";
     }
 
     /**
