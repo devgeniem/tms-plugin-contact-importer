@@ -10,27 +10,27 @@ class PlaceOfBusinessFacade {
     /**
      * Fields
      *
-     * @var object
+     * @var array
      */
-    private object $fields;
+    private array $fields;
 
     /**
      * Constructor
      *
-     * @param object $fields API fields.
+     * @param array $fields API fields.
      */
-    public function __construct( object $fields ) {
+    public function __construct( array $fields ) {
         return $this->set_fields( $fields );
     }
 
     /**
      * Set fields
      *
-     * @param object $fields API Contact fields.
+     * @param array $fields API Contact fields.
      *
      * @return object
      */
-    public function set_fields( object $fields ) : object {
+    public function set_fields( array $fields ) : object {
         $this->fields = $fields;
 
         return $this;
@@ -53,16 +53,18 @@ class PlaceOfBusinessFacade {
     public function to_array() : array {
         $fields = $this->fields;
 
+        $fields['phone_repeater'] = $this->handle_phone_numbers( $fields );
+
         return [
-            'id'                    => $fields->id ?? '',
-            'title'                 => $fields->title ?? '',
-            'description'           => $fields->description ?? '',
+            'id'                    => $fields['id'] ?? '',
+            'title'                 => $fields['title'] ?? '',
+            'description'           => $fields['description'] ?? '',
             'phone_repeater'        => $this->handle_phone_numbers( $fields ),
-            'email'                 => $fields->field_email ?? '',
-            'additional_info'       => $fields->field_additional_information ?? '',
-            'mail_address_street'   => $fields->field_address_postal->address_line1 ?? '',
-            'mail_address_zip_code' => $fields->field_address_postal->postal_code ?? '',
-            'mail_address_city'     => $fields->field_address_postal->locality ?? '',
+            'email'                 => $fields['field_email'] ?? '',
+            'additional_info'       => $fields['field_additional_information'] ?? '',
+            'mail_address_street'   => $fields['field_address_postal']['address_line1'] ?? '',
+            'mail_address_zip_code' => $fields['field_address_postal']['postal_code'] ?? '',
+            'mail_address_city'     => $fields['field_address_postal']['locality'] ?? '',
         ];
     }
 
@@ -76,11 +78,11 @@ class PlaceOfBusinessFacade {
     private function handle_phone_numbers( $fields ) : array {
         $numbers = [];
 
-        if ( ! empty( $fields->field_additinal_phones ) ) {
-            foreach ( $fields->field_additinal_phones as $phone ) {
+        if ( ! empty( $fields['field_additional_phones'] ) ) {
+            foreach ( $fields['field_additional_phones'] as $phone ) {
                 $numbers[] = [
-                    'phone_text'   => $phone->telephone_supplementary ?? '',
-                    'phone_number' => $phone->telephone_number,
+                    'phone_text'   => $phone['telephone_supplementary'] ?? '',
+                    'phone_number' => $phone['telephone_number'],
                 ];
             }
         }
