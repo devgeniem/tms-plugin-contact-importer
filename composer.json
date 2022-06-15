@@ -1,14 +1,19 @@
 {
-    "name": "tampere/tms-plugin-contact-importer",
+    "name": "devgeniem/tms-plugin-contact-importer",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
     "description": "Import person and place of business entities from Tampere.fi",
     "homepage": "https://geniem.com",
     "authors": [
         {
-            "name": "Your Name",
+            "name": "Ville Viklund",
             "role": "Developer",
-            "homepage": "https://github.com/yourname"
+            "homepage": "https://github.com/ville6000"
+        },
+        {
+            "name": "Viljami Hirvonen",
+            "role": "Developer",
+            "homepage": "https://github.com/vhirvonen"
         }
     ],
     "minimum-stability": "stable",
