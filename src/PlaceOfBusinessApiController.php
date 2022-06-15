@@ -23,4 +23,21 @@ class PlaceOfBusinessApiController extends ApiController {
     protected function get_slug() : string {
         return self::SLUG;
     }
+
+    /**
+     * Get results.
+     *
+     * @return false|mixed
+     */
+    public function get_results() {
+        $file = $this->get_file();
+
+        if ( ! file_exists( $file ) ) {
+            return false;
+        }
+
+        $file_contents = file_get_contents( $file );
+
+        return ! empty( $file_contents ) ? json_decode( $file_contents, true ) : false;
+    }
 }
