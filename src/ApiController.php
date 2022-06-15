@@ -41,9 +41,10 @@ abstract class ApiController {
      */
     public function get_file() : string {
         $filename = $this->get_output_path() . 'drupal-' . $this->get_slug();
+        $lang     = $this->get_language();
 
-        if ( ! empty( $this->language ) ) {
-            $filename .= "-{$this->language}";
+        if ( ! empty( $lang ) ) {
+            $filename .= "-$lang";
         }
 
         return "$filename.json";
@@ -174,7 +175,12 @@ abstract class ApiController {
         return $this->do_query( $this->get_slug(), [], $params, $args );
     }
 
-    public abstract function get_results();
+    /**
+     * Get results.
+     *
+     * @return mixed
+     */
+    abstract public function get_results();
 
     /**
      * Recursively get all pages from API.
@@ -230,8 +236,8 @@ abstract class ApiController {
     /**
      * Encode data to JSON & write to file.
      *
-     * @param array  $data     Data.
-     * @param string $filename File name.
+     * @param array  $data Data.
+     * @param string $file File name.
      *
      * @return bool True on success.
      */
