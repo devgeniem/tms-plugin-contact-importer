@@ -44,7 +44,7 @@ abstract class ApiController {
             '%s%s-%s.json',
             $this->get_output_path(),
             'drupal-' . $this->get_slug(),
-            $this->language
+            $this->get_language()
         );
     }
 
@@ -105,10 +105,6 @@ abstract class ApiController {
      * @return bool|mixed
      */
     public function do_request( $path, array $params = [], array $request_args = [] ) {
-        if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-            return;
-        }
-
         $base_url = $this->get_api_base_url();
 
         if ( empty( $base_url ) ) {
