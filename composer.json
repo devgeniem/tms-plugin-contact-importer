@@ -1,5 +1,5 @@
 {
-    "name": "tampere/tms-plugin-contact-importer",
+    "name": "devgeniem/tms-plugin-contact-importer",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
     "description": "Import person and place of business entities from Tampere.fi",
