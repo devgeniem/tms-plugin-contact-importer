@@ -5,6 +5,8 @@
 
 namespace TMS\Plugin\ContactImporter;
 
+use WP_CLI;
+
 /**
  * Class Plugin
  *
@@ -118,6 +120,18 @@ final class Plugin {
     }
 
     /**
+     * Get languages.
+     *
+     * @return string[]
+     */
+    protected function get_languages() : array {
+        return [
+            'fi',
+            'en',
+        ];
+    }
+
+    /**
      * Add the WP CLI commands.
      *
      * @return void
@@ -151,10 +165,7 @@ final class Plugin {
         WP_CLI::log( 'Start person import' );
 
         $api       = new PersonApiController();
-        $languages = [
-            'fi',
-            'en',
-        ];
+        $languages = $this->get_languages();
 
         foreach ( $languages as $language ) {
             $api->set_language( $language );
@@ -174,16 +185,20 @@ final class Plugin {
     public function cli_place_of_business_import() : void {
         WP_CLI::log( 'Start place_of_business import' );
 
-        $api = new PlaceOfBusinessApiController();
+        $api       = new PlaceOfBusinessApiController();
+        $languages = $this->get_languages();
 
-        $results = $api->get();
+        foreach ( $languages as $language ) {
+            $api->set_language( $language );
+            $results = $api->query();
 
-        if ( empty( $results ) ) {
-            return;
+            if ( empty( $results ) ) {
+                return;
+            }
+
+            $file_name = $api->get_file();
+
+            $api->save_to_file( $results, $file_name );
         }
-
-        $file_name = $api->get_file();
-
-        $api->save_to_file( $results, $file_name );
     }
 }

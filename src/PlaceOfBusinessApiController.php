@@ -30,6 +30,15 @@ class PlaceOfBusinessApiController extends ApiController {
      * @return false|mixed
      */
     public function get_results() {
+        if ( DPT_PLL_ACTIVE && function_exists( 'pll_current_language' ) ) {
+            $lang = pll_current_language();
+        }
+        else {
+            $lang = get_locale();
+        }
+
+        $this->set_language( $lang );
+
         $file = $this->get_file();
 
         if ( ! file_exists( $file ) ) {
