@@ -174,7 +174,12 @@ abstract class ApiController {
         return $this->do_query( $this->get_slug(), [], $params, $args );
     }
 
-    public abstract function get_results();
+    /**
+     * Get results.
+     *
+     * @return mixed
+     */
+    abstract public function get_results();
 
     /**
      * Recursively get all pages from API.
@@ -230,8 +235,8 @@ abstract class ApiController {
     /**
      * Encode data to JSON & write to file.
      *
-     * @param array  $data     Data.
-     * @param string $filename File name.
+     * @param array  $data Data.
+     * @param string $file File name.
      *
      * @return bool True on success.
      */
