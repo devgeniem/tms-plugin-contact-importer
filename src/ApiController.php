@@ -106,10 +106,6 @@ abstract class ApiController {
      * @return bool|mixed
      */
     public function do_request( $path, array $params = [], array $request_args = [] ) {
-        if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-            return;
-        }
-
         $base_url = $this->get_api_base_url();
 
         if ( empty( $base_url ) ) {
@@ -158,7 +154,7 @@ abstract class ApiController {
      *
      * @return mixed
      */
-    public function get() {
+    public function query() {
         $args = [
             'headers' => [],
             'timeout' => 30,
@@ -175,8 +171,10 @@ abstract class ApiController {
             'page[limit]'    => 50,
         ];
 
-        return $this->do_get( $this->get_slug(), [], $params, $args );
+        return $this->do_query( $this->get_slug(), [], $params, $args );
     }
+
+    public abstract function get_results();
 
     /**
      * Recursively get all pages from API.
@@ -188,7 +186,7 @@ abstract class ApiController {
      *
      * @return array
      */
-    protected function do_get( string $slug, array $data = [], array $params = [], array $args = [] ) {
+    protected function do_query( string $slug, array $data = [], array $params = [], array $args = [] ) {
         $response = $this->do_request( $slug, $params, $args );
 
         if ( ! $this->is_valid_response( $response ) ) {
@@ -207,7 +205,7 @@ abstract class ApiController {
 
         return empty( $query_parts )
             ? $data
-            : $this->do_get( $slug, $data, $query_parts ?? [], $args );
+            : $this->do_query( $slug, $data, $query_parts ?? [], $args );
     }
 
     /**
