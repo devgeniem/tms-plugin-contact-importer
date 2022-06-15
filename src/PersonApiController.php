@@ -38,7 +38,7 @@ class PersonApiController extends ApiController {
             return false;
         }
 
-        $file_contents = file_get_contents( $file );
+        $file_contents = file_get_contents( $file ); // phpcs:ignore
 
         return ! empty( $file_contents ) ? $this->validate_result_set( json_decode( $file_contents, true ) ) : false;
     }

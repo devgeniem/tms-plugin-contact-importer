@@ -242,7 +242,7 @@ abstract class ApiController {
      * @return bool True on success.
      */
     public function save_to_file( $data, $file ) : bool {
-        $success = ! empty( file_put_contents( $file, json_encode( $data ) ) );
+        $success = ! empty( file_put_contents( $file, json_encode( $data ) ) ); // phpcs:ignore
 
         if ( ! $success ) {
             \WP_CLI::error( 'TMS\Plugin\ContactImporter\ApiController: Failed to write JSON file.' );
