@@ -153,7 +153,7 @@ abstract class ApiController {
      *
      * @return mixed
      */
-    public function get() {
+    public function query() {
         $args = [
             'headers' => [],
             'timeout' => 30,
@@ -170,8 +170,10 @@ abstract class ApiController {
             'page[limit]'    => 50,
         ];
 
-        return $this->do_get( $this->get_slug(), [], $params, $args );
+        return $this->do_query( $this->get_slug(), [], $params, $args );
     }
+
+    public abstract function get_results();
 
     /**
      * Recursively get all pages from API.
@@ -183,7 +185,7 @@ abstract class ApiController {
      *
      * @return array
      */
-    protected function do_get( string $slug, array $data = [], array $params = [], array $args = [] ) {
+    protected function do_query( string $slug, array $data = [], array $params = [], array $args = [] ) {
         $response = $this->do_request( $slug, $params, $args );
 
         if ( ! $this->is_valid_response( $response ) ) {
@@ -202,7 +204,7 @@ abstract class ApiController {
 
         return empty( $query_parts )
             ? $data
-            : $this->do_get( $slug, $data, $query_parts ?? [], $args );
+            : $this->do_query( $slug, $data, $query_parts ?? [], $args );
     }
 
     /**

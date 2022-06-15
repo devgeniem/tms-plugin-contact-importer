@@ -162,7 +162,7 @@ final class Plugin {
             $api->set_language( $language );
 
             $file_name = $api->get_file();
-            $contacts  = $api->validate_result_set( $api->get() );
+            $contacts  = $api->validate_result_set( $api->query() );
 
             $api->save_to_file( $contacts, $file_name );
         }

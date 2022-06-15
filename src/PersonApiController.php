@@ -18,6 +18,25 @@ class PersonApiController extends ApiController {
     const SLUG = 'person';
 
     /**
+     * Get results.
+     *
+     * @return false|mixed
+     */
+    public function get_results() {
+        $this->set_language( DPT_PLL_ACTIVE ? pll_current_language() : 'fi' );
+
+        $file = $this->get_file();
+
+        if ( ! file_exists( $file ) ) {
+            return false;
+        }
+
+        $file_contents = file_get_contents( $file );
+
+        return ! empty( $file_contents ) ? $this->validate_result_set( json_decode( $file_contents, true ) ) : false;
+    }
+
+    /**
      * Get endpoint slug
      *
      * @return string
@@ -72,7 +91,7 @@ class PersonApiController extends ApiController {
      *
      * @return array
      */
-    protected function do_get( string $slug, array $data = [], array $params = [], array $args = [] ) {
+    protected function do_query( string $slug, array $data = [], array $params = [], array $args = [] ) {
         $response = $this->do_request( $slug, $params, $args );
 
         if ( ! $this->is_valid_response( $response ) ) {
@@ -91,6 +110,6 @@ class PersonApiController extends ApiController {
 
         return empty( $query_parts )
             ? $data
-            : $this->do_get( $slug, $data, $query_parts ?? [], $args );
+            : $this->do_query( $slug, $data, $query_parts ?? [], $args );
     }
 }
