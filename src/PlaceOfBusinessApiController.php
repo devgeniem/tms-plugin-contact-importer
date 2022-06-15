@@ -45,7 +45,7 @@ class PlaceOfBusinessApiController extends ApiController {
             return false;
         }
 
-        $file_contents = file_get_contents( $file );
+        $file_contents = file_get_contents( $file ); // phpcs:ignore
 
         return ! empty( $file_contents ) ? json_decode( $file_contents, true ) : false;
     }
