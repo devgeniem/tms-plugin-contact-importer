@@ -168,6 +168,11 @@ final class Plugin {
         }
     }
 
+    /**
+     * Place of Business import callback
+     *
+     * @return void
+     */
     public function cli_place_of_business_import() : void {
     }
 }
