@@ -6,9 +6,14 @@
     "homepage": "https://geniem.com",
     "authors": [
         {
-            "name": "Your Name",
+            "name": "Ville Viklund",
             "role": "Developer",
-            "homepage": "https://github.com/yourname"
+            "homepage": "https://github.com/ville6000"
+        },
+        {
+            "name": "Viljami Hirvonen",
+            "role": "Developer",
+            "homepage": "https://github.com/vhirvonen"
         }
     ],
     "minimum-stability": "stable",
