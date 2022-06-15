@@ -41,8 +41,7 @@ abstract class ApiController {
      */
     public function get_file() : string {
         $filename = $this->get_output_path() . 'drupal-' . $this->get_slug();
-
-        $lang = $this->get_language();
+        $lang     = $this->get_language();
 
         if ( ! empty( $lang ) ) {
             $filename .= "-$lang";
