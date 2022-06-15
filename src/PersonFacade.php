@@ -58,7 +58,8 @@ class PersonFacade {
 
         $data = [
             'id'                        => $fields->id ?? '',
-            'image'                     => $fields->field_image->field_media_image->image_full_url ?? apply_filters( 'tms/plugin-contact-importer/placeholder_image', '' ),
+            'image'                     => $fields->field_image->field_media_image->image_full_url
+                                           ?? apply_filters( 'tms/plugin-contact-importer/placeholder_image', '' ),
             'first_name'                => $fields->field_first_names ?? '',
             'last_name'                 => $fields->field_last_name ?? '',
             'title'                     => $fields->field_hr_title->name ?? '',
