@@ -5,8 +5,6 @@
 
 namespace TMS\Plugin\ContactImporter;
 
-use WP_CLI;
-
 /**
  * Class Plugin
  *

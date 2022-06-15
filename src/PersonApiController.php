@@ -23,7 +23,14 @@ class PersonApiController extends ApiController {
      * @return false|mixed
      */
     public function get_results() {
-        $this->set_language( DPT_PLL_ACTIVE ? pll_current_language() : 'fi' );
+        if ( DPT_PLL_ACTIVE && function_exists( 'pll_current_language' ) ) {
+            $lang = pll_current_language();
+        }
+        else {
+            $lang = get_locale();
+        }
+
+        $this->set_language( $lang );
 
         $file = $this->get_file();
 
