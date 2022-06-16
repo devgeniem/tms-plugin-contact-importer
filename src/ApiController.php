@@ -6,6 +6,7 @@
 namespace TMS\Plugin\ContactImporter;
 
 use TMS\Theme\Base\Logger;
+use WP_CLI;
 
 /**
  * Tampere API Controller
@@ -15,7 +16,7 @@ abstract class ApiController {
     /**
      * Output file path.
      */
-    const OUTPUT_PATH = '/tmp/';
+    const OUTPUT_PATH = '/home/tms-contact-import/';
 
     /**
      * Request language
@@ -23,6 +24,31 @@ abstract class ApiController {
      * @var string
      */
     protected string $language = '';
+
+    /**
+     * Get file output path.
+     *
+     * @return string
+     */
+    protected function get_output_path() : string {
+        return WP_ENV === 'development' ? '/tmp/' : self::OUTPUT_PATH;
+    }
+
+    /**
+     * Get file path and name.
+     *
+     * @return string
+     */
+    public function get_file() : string {
+        $filename = $this->get_output_path() . 'drupal-' . $this->get_slug();
+        $lang     = $this->get_language();
+
+        if ( ! empty( $lang ) ) {
+            $filename .= "-$lang";
+        }
+
+        return "$filename.json";
+    }
 
     /**
      * Set language
@@ -100,7 +126,7 @@ abstract class ApiController {
             )
         );
 
-        \WP_CLI::log( 'Fetch: ' . $request_url );
+        WP_CLI::log( 'Fetch: ' . $request_url );
 
         $response = \wp_remote_get( $request_url, $request_args );
 
@@ -129,8 +155,8 @@ abstract class ApiController {
      *
      * @return mixed
      */
-    public function get() {
-        $args      = [
+    public function query() {
+        $args = [
             'headers' => [],
             'timeout' => 30,
         ];
@@ -146,8 +172,15 @@ abstract class ApiController {
             'page[limit]'    => 50,
         ];
 
-        return $this->do_get( $this->get_slug(), [], $params, $args );
+        return $this->do_query( $this->get_slug(), [], $params, $args );
     }
+
+    /**
+     * Get results.
+     *
+     * @return mixed
+     */
+    abstract public function get_results();
 
     /**
      * Recursively get all pages from API.
@@ -159,7 +192,7 @@ abstract class ApiController {
      *
      * @return array
      */
-    protected function do_get( string $slug, array $data = [], array $params = [], array $args = [] ) {
+    protected function do_query( string $slug, array $data = [], array $params = [], array $args = [] ) {
         $response = $this->do_request( $slug, $params, $args );
 
         if ( ! $this->is_valid_response( $response ) ) {
@@ -178,7 +211,7 @@ abstract class ApiController {
 
         return empty( $query_parts )
             ? $data
-            : $this->do_get( $slug, $data, $query_parts ?? [], $args );
+            : $this->do_query( $slug, $data, $query_parts ?? [], $args );
     }
 
     /**
@@ -203,13 +236,13 @@ abstract class ApiController {
     /**
      * Encode data to JSON & write to file.
      *
-     * @param array  $data     Data.
-     * @param string $filename File name.
+     * @param array  $data Data.
+     * @param string $file File name.
      *
      * @return bool True on success.
      */
-    public function save_to_file( $data, $filename ) : bool {
-        $success = ! empty( file_put_contents( self::OUTPUT_PATH . $filename, json_encode( $data ) ) );
+    public function save_to_file( $data, $file ) : bool {
+        $success = ! empty( file_put_contents( $file, json_encode( $data ) ) ); // phpcs:ignore
 
         if ( ! $success ) {
             \WP_CLI::error( 'TMS\Plugin\ContactImporter\ApiController: Failed to write JSON file.' );
