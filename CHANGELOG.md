@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## Unreleased
 
+## [0.1.0] - 2022-06-16
+
 - feat/place-of-business: Place of business import.
 - feat/person: Person import.
-
-## [0.0.1] - 2021-01-01
 
 ### Added
 
