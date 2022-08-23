@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning][semver].
 
 ## Unreleased
 
+## [0.1.1] - 2022-08-23
+
+- TMS-894: Fix composer
+
 ## [0.1.0] - 2022-06-16
 
 - feat/place-of-business: Place of business import.
