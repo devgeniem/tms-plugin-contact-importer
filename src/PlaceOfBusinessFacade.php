@@ -39,9 +39,9 @@ class PlaceOfBusinessFacade {
     /**
      * Get fields
      *
-     * @return object
+     * @return array
      */
-    public function get_fields() : object {
+    public function get_fields() : array {
         return $this->fields;
     }
 

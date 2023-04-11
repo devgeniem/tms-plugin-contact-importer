@@ -21,7 +21,7 @@
         "wordpress", "wp", "plugin"
     ],
     "require": {
-        "php": ">=7.4|^8",
+        "php": "^8.1",
         "composer/installers": "^v1.10.0",
         "ext-json": "*"
     },
@@ -33,9 +33,9 @@
         "devgeniem/geniem-rules-codesniffer": "^1"
     },
     "scripts": {
-        "lint": "vendor/bin/phpcs --standard=phpcs.xml.dist src/ -s --warning-severity=0",
-        "lint-all": "vendor/bin/phpcs --standard=phpcs.xml.dist src/",
-        "lint-fix": "vendor/bin/phpcbf --standard=phpcs.xml.dist --basepath=. .src/"
+        "lint": "vendor/bin/phpcs --standard=phpcs.xml.dist src/ -s --warning-severity=0 --runtime-set minimum_supported_wp_version 6.0",
+        "lint-all": "vendor/bin/phpcs --standard=phpcs.xml.dist src/ --runtime-set minimum_supported_wp_version 6.0",
+        "lint-fix": "vendor/bin/phpcbf --standard=phpcs.xml.dist --basepath=. .src/ --runtime-set minimum_supported_wp_version 6.0"
     },
     "config": {
         "allow-plugins": {
