@@ -3,8 +3,8 @@
  * Plugin Name: TMS Contact Importer
  * Plugin URI: https://github.com/devgeniem/tms-plugin-contact-importer
  * Description: {{plugin-description}}
- * Version: 0.1.0
- * Requires PHP: 7.4
+ * Version: 0.2.0
+ * Requires PHP: 8.1
  * Author: Geniem Oy
  * Author URI: https://geniem.com
  * License: GPL v3 or later
