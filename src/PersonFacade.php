@@ -124,8 +124,9 @@ class PersonFacade {
         if ( ! empty( $fields->field_additinal_phones ) ) {
             foreach ( $fields->field_additinal_phones as $phone ) {
                 $data['phone_repeater'][] = [
-                    'phone_text'   => $phone->telephone_supplementary ?? '',
-                    'phone_number' => $phone->telephone_number,
+                    'phone_text'     => $phone->telephone_supplementary ?? '',
+                    'phone_number'   => $phone->telephone_number,
+                    'trimmed_number' => str_replace( ' ', '', $phone->telephone_number ),
                 ];
             }
         }
